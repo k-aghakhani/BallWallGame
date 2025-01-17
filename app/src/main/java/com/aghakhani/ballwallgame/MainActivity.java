@@ -1,6 +1,8 @@
 package com.aghakhani.ballwallgame;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    private View ball;
+    private View wall;
+    private TextView scoreText;
+    private int score = 0;
+    private float ballSpeed = -20; // Ball speed up
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
