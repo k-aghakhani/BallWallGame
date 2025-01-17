@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private View ball;
     private TextView scoreText;
     private RelativeLayout mainLayout;
-    private int score = 0;
+    private int score =  0;
     private boolean gameOver = false;
     private Handler handler = new Handler();
     private Random random = new Random();
