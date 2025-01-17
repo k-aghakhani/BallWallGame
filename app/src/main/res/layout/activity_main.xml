@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
@@ -18,20 +18,13 @@
         android:layout_margin="16dp"/>
 
     <View
-        android:id="@+id/wall"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@android:color/white"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"/>
-
-    <View
         android:id="@+id/ball"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/ball_shape"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/wall"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"/>
 
 
 </RelativeLayout>
