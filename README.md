@@ -70,6 +70,6 @@ We’d love to hear your thoughts, questions, or suggestions! Reach out to us:
 
 ✉️ Email: kiarash1988@gmail.com
 
-🔗 GitHub: BallWallGame Repository
+🔗 GitHub: [BallWallGame Repository](https://github.com/k-aghakhani/BallWallGame.git)
 
 Enjoy the game and happy coding! 🎉
