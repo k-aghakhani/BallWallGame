@@ -115,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
                 if (!gameOver && isColliding(ball, obstacle)) {
                     gameOver = true; // Mark game as over
                     scoreText.setText("Game Over! Score: " + score); // Show game over message
+
+                    // Change score box color to red
+                    scoreText.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                    scoreText.setTextColor(getResources().getColor(android.R.color.white)); // Ensure text is visible
+
                     vibrateEffect(ball); // Apply a vibration effect to the ball
                     playSound(R.raw.game_over_sound); // Play game-over sound
                 } else if (!gameOver) {
