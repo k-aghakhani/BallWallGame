@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@drawable/background_gradient"
     tools:context=".MainActivity">
 
     <TextView
@@ -13,18 +12,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Score: 0"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textColor="@android:color/white"
-        android:layout_margin="16dp"/>
+        android:background="@drawable/score_background"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:elevation="4dp"
+        android:shadowColor="@android:color/darker_gray"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5" />
 
     <View
         android:id="@+id/ball"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/ball_shape"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"/>
-
-
+        android:layout_marginBottom="70dp" />
 </RelativeLayout>
