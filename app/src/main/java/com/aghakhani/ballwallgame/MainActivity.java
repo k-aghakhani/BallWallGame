@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
     private void showGameOverDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("🎮 Game Over 🎮")
-                .setMessage("Oh no! \nYour score: " + score + "\n\nDo you want to try again or exit the game?")
+                .setMessage("Oh no! You lost. \nYour score: " + score + "\n\nDo you want to try again or exit the game?")
                 .setCancelable(false)
                 .setPositiveButton("🔄 Restart", new DialogInterface.OnClickListener() {
                     @Override
