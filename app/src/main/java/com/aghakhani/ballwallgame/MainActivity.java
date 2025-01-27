@@ -1,5 +1,8 @@
 package com.aghakhani.ballwallgame;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (!gameOver && isColliding(ball, obstacle)) {
                     gameOver = true; // Mark game as over
-                    scoreText.setText("Game Over! Score: " + score); // Show game over message
+                    showGameOverDialog(); // Show game over dialog
 
                     // Change score box color to red
                     scoreText.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
@@ -173,5 +176,32 @@ public class MainActivity extends AppCompatActivity {
         MediaPlayer mediaPlayer = MediaPlayer.create(this, soundResId);
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+    }
+
+    // Show a game over dialog
+    private void showGameOverDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Game Over")
+                .setMessage("Your Score: " + score + "\nYou lost! What would you like to do?")
+                .setCancelable(false)
+                .setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Restart the game
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Exit the game
+                        finish();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
