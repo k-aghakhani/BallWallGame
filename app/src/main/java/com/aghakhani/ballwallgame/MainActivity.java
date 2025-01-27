@@ -181,10 +181,10 @@ public class MainActivity extends AppCompatActivity {
     // Show a game over dialog
     private void showGameOverDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Game Over")
-                .setMessage("Your Score: " + score + "\nYou lost! What would you like to do?")
+        builder.setTitle("🎮 Game Over 🎮")
+                .setMessage("Oh no! \nYour score: " + score + "\n\nDo you want to try again or exit the game?")
                 .setCancelable(false)
-                .setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+                .setPositiveButton("🔄 Restart", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Restart the game
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 })
-                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                .setNegativeButton("❌ Exit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Exit the game
