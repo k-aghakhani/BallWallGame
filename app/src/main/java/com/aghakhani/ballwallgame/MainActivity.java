@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Show a game over dialog
     private void showGameOverDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
         builder.setTitle("🎮 Game Over 🎮")
                 .setMessage("Oh no! You lost. \nYour score: " + score + "\n\nDo you want to try again or exit the game?")
                 .setCancelable(false)
@@ -203,5 +203,18 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        // تغییر رنگ متن عنوان و پیام
+        TextView titleView = dialog.findViewById(android.R.id.title);
+        if (titleView != null) {
+            titleView.setTextColor(getResources().getColor(android.R.color.white));
+            titleView.setTextSize(24);
+        }
+
+        TextView messageView = dialog.findViewById(android.R.id.message);
+        if (messageView != null) {
+            messageView.setTextColor(getResources().getColor(android.R.color.white));
+            messageView.setTextSize(18);
+        }
     }
 }
