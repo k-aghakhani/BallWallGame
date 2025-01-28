@@ -3,11 +3,14 @@ package com.aghakhani.ballwallgame;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -204,17 +207,31 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // تغییر رنگ متن عنوان و پیام
-        TextView titleView = dialog.findViewById(android.R.id.title);
-        if (titleView != null) {
-            titleView.setTextColor(getResources().getColor(android.R.color.white));
-            titleView.setTextSize(24);
+        // تنظیم دستی استایل دکمه‌ها
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+        if (positiveButton != null) {
+            positiveButton.setBackgroundResource(R.drawable.button_background);
+            positiveButton.setTextColor(Color.WHITE);
+            positiveButton.setPadding(32, 16, 32, 16); // افزایش padding برای دکمه
         }
 
-        TextView messageView = dialog.findViewById(android.R.id.message);
-        if (messageView != null) {
-            messageView.setTextColor(getResources().getColor(android.R.color.white));
-            messageView.setTextSize(18);
+        if (negativeButton != null) {
+            negativeButton.setBackgroundResource(R.drawable.button_background);
+            negativeButton.setTextColor(Color.WHITE);
+            negativeButton.setPadding(32, 16, 32, 16); // افزایش padding برای دکمه
+        }
+
+        // تنظیم فاصله بین دکمه‌ها
+        if (positiveButton != null && negativeButton != null) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(16, 0, 16, 0); // فاصله بین دکمه‌ها
+            positiveButton.setLayoutParams(params);
+            negativeButton.setLayoutParams(params);
         }
     }
 }
