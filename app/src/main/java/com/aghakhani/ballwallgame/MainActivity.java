@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView scoreText; // The score display
     private RelativeLayout mainLayout; // The main game layout
     private int score = 0; // Player's current score
-    private boolean gameOver = false; // Game over flag
-    private Handler handler = new Handler(); // Handler for timed events
-    private Random random = new Random(); // Random generator for obstacle positions
+    private boolean gameOver = false; // Flag to indicate if the game is over
+    private Handler handler = new Handler(); // Handler for scheduling timed events
+    private Random random = new Random(); // Random generator for obstacle positions and properties
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         scoreText = findViewById(R.id.scoreText);
         mainLayout = findViewById(R.id.mainLayout);
 
-        // Set ball movement with touch events
+        // Set up ball movement with touch events
         ball.setOnTouchListener(new View.OnTouchListener() {
             float initialX, initialTouchX;
 
@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        // Save initial touch and ball positions
+                        // Store initial positions when the ball is touched
                         initialX = ball.getX();
                         initialTouchX = event.getRawX();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        // Calculate the new position and update ball position
+                        // Calculate new position and move the ball
                         float deltaX = event.getRawX() - initialTouchX;
                         float newX = initialX + deltaX;
                         // Keep the ball within screen boundaries
@@ -81,35 +81,46 @@ public class MainActivity extends AppCompatActivity {
         }, 1000);
     }
 
-    // Spawn a new obstacle
+    // Spawn a new obstacle with variety in size, color, and speed
     private void spawnObstacle() {
         View obstacle = new View(this);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 100);
-        // Set a random horizontal position for the obstacle
-        params.leftMargin = random.nextInt(getScreenWidth() - 100);
+
+        // Random size for the obstacle (between 50dp and 150dp)
+        int obstacleSize = random.nextInt(100) + 50; // Random between 50 and 150
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(obstacleSize, obstacleSize);
+        params.leftMargin = random.nextInt(getScreenWidth() - obstacleSize); // Random horizontal position
         params.topMargin = 0;
         obstacle.setLayoutParams(params);
-        obstacle.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
-        // Add the obstacle to the game layout
+        // Array of colors for variety
+        int[] obstacleColors = {
+                Color.RED,          // Red
+                Color.BLUE,         // Blue
+                Color.GREEN,        // Green
+                Color.YELLOW        // Yellow
+        };
+        obstacle.setBackgroundColor(obstacleColors[random.nextInt(obstacleColors.length)]);
+
+        // Add the obstacle to the layout
         mainLayout.addView(obstacle);
 
-        // Animate the obstacle moving downward
+        // Variable speed based on score (faster as score increases)
+        int duration = Math.max(500, 2000 - (score * 50)); // Minimum 500ms, maximum 2000ms
         obstacle.animate()
                 .translationY(getScreenHeight())
-                .setDuration(2000)
+                .setDuration(duration)
                 .withEndAction(() -> {
-                    // Remove the obstacle when it leaves the screen
+                    // Remove obstacle when it leaves the screen
                     mainLayout.removeView(obstacle);
                     if (!gameOver) {
-                        score++; // Increment the score
-                        updateScoreText(); // Update the score display
+                        score++; // Increment score
+                        updateScoreText(); // Update score display
                         playSound(R.raw.score_sound); // Play score sound
                     }
                 })
                 .start();
 
-        // Check for collisions between the ball and the obstacle
+        // Check for collision with the ball
         checkCollision(obstacle);
     }
 
@@ -119,15 +130,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (!gameOver && isColliding(ball, obstacle)) {
-                    gameOver = true; // Mark game as over
+                    gameOver = true; // End the game
                     showGameOverDialog(); // Show game over dialog
 
-                    // Change score box color to red
+                    // Change score background to red
                     scoreText.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                    scoreText.setTextColor(getResources().getColor(android.R.color.white)); // Ensure text is visible
+                    scoreText.setTextColor(getResources().getColor(android.R.color.white));
 
-                    vibrateEffect(ball); // Apply a vibration effect to the ball
-                    playSound(R.raw.game_over_sound); // Play game-over sound
+                    vibrateEffect(ball); // Apply vibration effect to the ball
+                    playSound(R.raw.game_over_sound); // Play game over sound
                 } else if (!gameOver) {
                     handler.postDelayed(this, 10); // Recheck collision every 10ms
                 }
@@ -148,23 +159,23 @@ public class MainActivity extends AppCompatActivity {
                 loc1[1] + v1.getHeight() > loc2[1];
     }
 
-    // Get the screen width
+    // Get the screen width in pixels
     private int getScreenWidth() {
         return getResources().getDisplayMetrics().widthPixels;
     }
 
-    // Get the screen height
+    // Get the screen height in pixels
     private int getScreenHeight() {
         return getResources().getDisplayMetrics().heightPixels;
     }
 
-    // Update the score display
+    // Update the score display text
     private void updateScoreText() {
         scoreText.setText("Score: " + score);
-        vibrateEffect(scoreText); // Apply a vibration effect to the score text
+        vibrateEffect(scoreText); // Apply vibration effect to the score text
     }
 
-    // Apply a vibration effect to a view
+    // Apply a vibration animation to a view
     private void vibrateEffect(View view) {
         view.animate()
                 .scaleX(1.2f)
@@ -174,14 +185,14 @@ public class MainActivity extends AppCompatActivity {
                 .start();
     }
 
-    // Play a sound effect
+    // Play a sound effect from resources
     private void playSound(int soundResId) {
         MediaPlayer mediaPlayer = MediaPlayer.create(this, soundResId);
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(MediaPlayer::release);
     }
 
-    // Show a game over dialog
+    // Show a game over dialog with restart and exit options
     private void showGameOverDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
         builder.setTitle("🎮 Game Over 🎮")
@@ -190,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("🔄 Restart", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Restart the game
+                        // Restart the game by recreating the activity
                         Intent intent = getIntent();
                         finish();
                         startActivity(intent);
@@ -207,31 +218,38 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // تنظیم دستی استایل دکمه‌ها
+        // Customize button styles manually
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
 
         if (positiveButton != null) {
             positiveButton.setBackgroundResource(R.drawable.button_background);
             positiveButton.setTextColor(Color.WHITE);
-            positiveButton.setPadding(32, 16, 32, 16); // افزایش padding برای دکمه
+            positiveButton.setPadding(32, 16, 32, 16);
         }
 
         if (negativeButton != null) {
             negativeButton.setBackgroundResource(R.drawable.button_background);
             negativeButton.setTextColor(Color.WHITE);
-            negativeButton.setPadding(32, 16, 32, 16); // افزایش padding برای دکمه
+            negativeButton.setPadding(32, 16, 32, 16);
         }
 
-        // تنظیم فاصله بین دکمه‌ها
+        // Adjust spacing between buttons
         if (positiveButton != null && negativeButton != null) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(16, 0, 16, 0); // فاصله بین دکمه‌ها
+            params.setMargins(16, 0, 16, 0);
             positiveButton.setLayoutParams(params);
             negativeButton.setLayoutParams(params);
         }
+    }
+
+    // Clean up Handler when the activity is destroyed
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null); // Prevent memory leaks
     }
 }
