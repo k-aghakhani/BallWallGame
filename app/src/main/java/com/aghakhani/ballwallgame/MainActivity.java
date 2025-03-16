@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                     // Change score background to red
                     scoreText.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
                     scoreText.setTextColor(getResources().getColor(android.R.color.white));
-
                     vibrateEffect(ball); // Apply vibration effect to the ball
                     playSound(R.raw.game_over_sound); // Play game over sound
                 } else if (!gameOver) {
@@ -196,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     private void showGameOverDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
         builder.setTitle("🎮 Game Over 🎮")
-                .setMessage("Oh no! You lost. \nYour score: " + score + "\n\nDo you want to try again or exit the game?")
+                .setMessage("Oh no! You lost.\nYour score: " + score + "\nDo you want to try again or exit the game?")
                 .setCancelable(false)
                 .setPositiveButton("🔄 Restart", new DialogInterface.OnClickListener() {
                     @Override
@@ -222,27 +221,30 @@ public class MainActivity extends AppCompatActivity {
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
 
-        if (positiveButton != null) {
-            positiveButton.setBackgroundResource(R.drawable.button_background);
-            positiveButton.setTextColor(Color.WHITE);
-            positiveButton.setPadding(32, 16, 32, 16);
-        }
-
-        if (negativeButton != null) {
-            negativeButton.setBackgroundResource(R.drawable.button_background);
-            negativeButton.setTextColor(Color.WHITE);
-            negativeButton.setPadding(32, 16, 32, 16);
-        }
-
-        // Adjust spacing between buttons
         if (positiveButton != null && negativeButton != null) {
+            // Set button backgrounds and text colors
+            positiveButton.setBackgroundResource(R.drawable.button_background);
+            negativeButton.setBackgroundResource(R.drawable.button_background);
+            positiveButton.setTextColor(Color.WHITE);
+            negativeButton.setTextColor(Color.WHITE);
+            positiveButton.setPadding(24, 12, 24, 12);
+            negativeButton.setPadding(24, 12, 24, 12);
+
+            // Adjust spacing between buttons
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(16, 0, 16, 0);
+            params.setMargins(16, 0, 16, 0); // Horizontal margin between buttons
             positiveButton.setLayoutParams(params);
             negativeButton.setLayoutParams(params);
+        }
+
+        // Center the message text
+        TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
+        if (messageText != null) {
+            messageText.setTextSize(16);
+            messageText.setGravity(android.view.Gravity.CENTER);
         }
     }
 
