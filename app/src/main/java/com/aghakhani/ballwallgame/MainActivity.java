@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(MediaPlayer::release);
     }
 
+
     // Show a game over dialog with restart and exit options
     private void showGameOverDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
@@ -235,16 +236,31 @@ public class MainActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(16, 0, 16, 0); // Horizontal margin between buttons
+            params.setMargins(24, 0, 24, 0); // Increase horizontal margin between buttons
             positiveButton.setLayoutParams(params);
             negativeButton.setLayoutParams(params);
         }
 
-        // Center the message text
+        // Center the message text and ensure readability
         TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
         if (messageText != null) {
-            messageText.setTextSize(16);
+            messageText.setTextSize(16); // Ensure readable size
+            messageText.setTextColor(Color.BLACK); // Force black text for contrast
             messageText.setGravity(android.view.Gravity.CENTER);
+            messageText.setPadding(0, 0, 0, 32); // Add bottom padding to increase space between text and buttons
+        }
+
+        // Ensure the title is readable and add padding
+        TextView titleText = (TextView) dialog.findViewById(getResources().getIdentifier("alertTitle", "id", "android"));
+        if (titleText != null) {
+            titleText.setTextColor(Color.BLACK); // Force black text for contrast
+            titleText.setPadding(0, 16, 0, 16); // Add padding to the title for better spacing
+        }
+
+        // Add padding to the dialog content to create more space
+        View dialogView = dialog.findViewById(android.R.id.content);
+        if (dialogView != null) {
+            dialogView.setPadding(24, 24, 24, 24); // Add padding to the entire dialog content
         }
     }
 
