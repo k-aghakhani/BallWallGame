@@ -8,7 +8,6 @@
     android:background="@drawable/background_gradient"
     tools:context=".MainActivity">
 
-
     <TextView
         android:id="@+id/scoreText"
         android:layout_width="wrap_content"
@@ -31,9 +30,9 @@
         android:id="@+id/ball"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/ball_shape"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp" />
+        android:background="@drawable/ball_face"
+    android:layout_centerHorizontal="true"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="70dp" />
 
 </RelativeLayout>
