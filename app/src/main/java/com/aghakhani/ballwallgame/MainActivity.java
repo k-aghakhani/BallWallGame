@@ -110,8 +110,11 @@ public class MainActivity extends AppCompatActivity {
         // Add the obstacle to the layout
         mainLayout.addView(obstacle);
 
-        // Variable speed based on score (faster as score increases)
-        int duration = Math.max(500, 2000 - (score * 50)); // Minimum 500ms, maximum 2000ms
+        // Calculate speed based on level (faster as level increases)
+        int baseDuration = 2000; // Base duration for Level 1
+        int levelFactor = Math.max(0, level - 1); // Increase difficulty from Level 2 onwards
+        int duration = Math.max(500, baseDuration - (levelFactor * 300)); // Decrease duration for higher levels
+
         obstacle.animate()
                 .translationY(getScreenHeight())
                 .setDuration(duration)
@@ -187,9 +190,9 @@ public class MainActivity extends AppCompatActivity {
         vibrateEffect(levelText); // Apply vibration effect to the level text
     }
 
-    // Check if the player has reached a new level (every 50 points)
+    // Check if the player has reached a new level (every 30 points)
     private void checkLevelUp() {
-        int newLevel = (score / 50) + 1; // Calculate the level based on score (every 50 points)
+        int newLevel = (score / 30) + 1; // Calculate the level based on score (every 30 points)
         if (newLevel > level) { // If a new level is reached
             level = newLevel; // Update the player's level
             updateLevelText(); // Update the level display
@@ -201,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
     private void showLevelUpDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
         builder.setTitle("🎉 Level Up! 🎉")
-                .setMessage("تبریک می‌گم!\nشما لِوِل " + (level - 1) + " رو گذروندید!\nحالا وارد لِوِل " + level + " شدید.")
+                .setMessage("Congratulations!\nYou passed Level " + (level - 1) + "!\nNow you are on Level " + level + ".")
                 .setCancelable(false)
-                .setPositiveButton("ادامه", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss(); // Close the dialog and continue the game
