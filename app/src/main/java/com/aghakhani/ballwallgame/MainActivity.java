@@ -22,8 +22,10 @@ public class MainActivity extends AppCompatActivity {
 
     private View ball; // The player's ball
     private TextView scoreText; // The score display
+    private TextView levelText; // The level display
     private RelativeLayout mainLayout; // The main game layout
     private int score = 0; // Player's current score
+    private int level = 1; // Player's current level
     private boolean gameOver = false; // Flag to indicate if the game is over
     private Handler handler = new Handler(); // Handler for scheduling timed events
     private Random random = new Random(); // Random generator for obstacle positions and properties
@@ -36,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
         // Initialize UI elements
         ball = findViewById(R.id.ball);
         scoreText = findViewById(R.id.scoreText);
+        levelText = findViewById(R.id.levelText);
         mainLayout = findViewById(R.id.mainLayout);
+
+        // Set initial level display
+        updateLevelText();
 
         // Set up ball movement with touch events
         ball.setOnTouchListener(new View.OnTouchListener() {
@@ -115,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     if (!gameOver) {
                         score++; // Increment score
                         updateScoreText(); // Update score display
+                        checkLevelUp(); // Check if player levels up
                         playSound(R.raw.score_sound); // Play score sound
                     }
                 })
@@ -174,6 +181,69 @@ public class MainActivity extends AppCompatActivity {
         vibrateEffect(scoreText); // Apply vibration effect to the score text
     }
 
+    // Update the level display text
+    private void updateLevelText() {
+        levelText.setText("Level: " + level);
+        vibrateEffect(levelText); // Apply vibration effect to the level text
+    }
+
+    // Check if the player has reached a new level (every 50 points)
+    private void checkLevelUp() {
+        int newLevel = (score / 50) + 1; // Calculate the level based on score (every 50 points)
+        if (newLevel > level) { // If a new level is reached
+            level = newLevel; // Update the player's level
+            updateLevelText(); // Update the level display
+            showLevelUpDialog(); // Show level-up dialog
+        }
+    }
+
+    // Show a dialog when the player levels up
+    private void showLevelUpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
+        builder.setTitle("🎉 Level Up! 🎉")
+                .setMessage("تبریک می‌گم!\nشما لِوِل " + (level - 1) + " رو گذروندید!\nحالا وارد لِوِل " + level + " شدید.")
+                .setCancelable(false)
+                .setPositiveButton("ادامه", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); // Close the dialog and continue the game
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Customize button styles manually
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        if (positiveButton != null) {
+            positiveButton.setBackgroundResource(R.drawable.button_background);
+            positiveButton.setTextColor(Color.WHITE);
+            positiveButton.setPadding(24, 12, 24, 12);
+        }
+
+        // Center the message text and ensure readability
+        TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
+        if (messageText != null) {
+            messageText.setTextSize(16);
+            messageText.setTextColor(Color.BLACK);
+            messageText.setGravity(android.view.Gravity.CENTER);
+            messageText.setPadding(0, 0, 0, 32);
+        }
+
+        // Ensure the title is readable and add padding
+        TextView titleText = (TextView) dialog.findViewById(getResources().getIdentifier("alertTitle", "id", "android"));
+        if (titleText != null) {
+            titleText.setTextColor(Color.BLACK);
+            titleText.setPadding(0, 16, 0, 16);
+        }
+
+        // Add padding to the dialog content to create more space
+        View dialogView = dialog.findViewById(android.R.id.content);
+        if (dialogView != null) {
+            dialogView.setPadding(24, 24, 24, 24);
+        }
+    }
+
     // Apply a vibration animation to a view
     private void vibrateEffect(View view) {
         view.animate()
@@ -190,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(MediaPlayer::release);
     }
-
 
     // Show a game over dialog with restart and exit options
     private void showGameOverDialog() {
@@ -223,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
         Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
 
         if (positiveButton != null && negativeButton != null) {
-            // Set button backgrounds and text colors
             positiveButton.setBackgroundResource(R.drawable.button_background);
             negativeButton.setBackgroundResource(R.drawable.button_background);
             positiveButton.setTextColor(Color.WHITE);
@@ -231,36 +299,32 @@ public class MainActivity extends AppCompatActivity {
             positiveButton.setPadding(24, 12, 24, 12);
             negativeButton.setPadding(24, 12, 24, 12);
 
-            // Adjust spacing between buttons
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(24, 0, 24, 0); // Increase horizontal margin between buttons
+            params.setMargins(24, 0, 24, 0);
             positiveButton.setLayoutParams(params);
             negativeButton.setLayoutParams(params);
         }
 
-        // Center the message text and ensure readability
         TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
         if (messageText != null) {
-            messageText.setTextSize(16); // Ensure readable size
-            messageText.setTextColor(Color.BLACK); // Force black text for contrast
+            messageText.setTextSize(16);
+            messageText.setTextColor(Color.BLACK);
             messageText.setGravity(android.view.Gravity.CENTER);
-            messageText.setPadding(0, 0, 0, 32); // Add bottom padding to increase space between text and buttons
+            messageText.setPadding(0, 0, 0, 32);
         }
 
-        // Ensure the title is readable and add padding
         TextView titleText = (TextView) dialog.findViewById(getResources().getIdentifier("alertTitle", "id", "android"));
         if (titleText != null) {
-            titleText.setTextColor(Color.BLACK); // Force black text for contrast
-            titleText.setPadding(0, 16, 0, 16); // Add padding to the title for better spacing
+            titleText.setTextColor(Color.BLACK);
+            titleText.setPadding(0, 16, 0, 16);
         }
 
-        // Add padding to the dialog content to create more space
         View dialogView = dialog.findViewById(android.R.id.content);
         if (dialogView != null) {
-            dialogView.setPadding(24, 24, 24, 24); // Add padding to the entire dialog content
+            dialogView.setPadding(24, 24, 24, 24);
         }
     }
 
