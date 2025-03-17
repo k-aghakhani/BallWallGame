@@ -27,8 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private int score = 0; // Player's current score
     private int level = 1; // Player's current level
     private boolean gameOver = false; // Flag to indicate if the game is over
+    private boolean isPaused = false; // Flag to indicate if the game is paused
     private Handler handler = new Handler(); // Handler for scheduling timed events
     private Random random = new Random(); // Random generator for obstacle positions and properties
+    private Runnable obstacleSpawnerRunnable; // Runnable for spawning obstacles
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,15 +78,16 @@ public class MainActivity extends AppCompatActivity {
 
     // Start spawning obstacles at regular intervals
     private void startObstacleSpawner() {
-        handler.postDelayed(new Runnable() {
+        obstacleSpawnerRunnable = new Runnable() {
             @Override
             public void run() {
-                if (!gameOver) {
+                if (!gameOver && !isPaused) {
                     spawnObstacle();
                     handler.postDelayed(this, 1000); // Spawn an obstacle every 1 second
                 }
             }
-        }, 1000);
+        };
+        handler.postDelayed(obstacleSpawnerRunnable, 1000);
     }
 
     // Spawn a new obstacle with variety in size, color, and speed
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 .withEndAction(() -> {
                     // Remove obstacle when it leaves the screen
                     mainLayout.removeView(obstacle);
-                    if (!gameOver) {
+                    if (!gameOver && !isPaused) {
                         score++; // Increment score
                         updateScoreText(); // Update score display
                         checkLevelUp(); // Check if player levels up
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!gameOver && isColliding(ball, obstacle)) {
+                if (!gameOver && !isPaused && isColliding(ball, obstacle)) {
                     gameOver = true; // End the game
                     showGameOverDialog(); // Show game over dialog
 
@@ -148,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     scoreText.setTextColor(getResources().getColor(android.R.color.white));
                     vibrateEffect(ball); // Apply vibration effect to the ball
                     playSound(R.raw.game_over_sound); // Play game over sound
-                } else if (!gameOver) {
+                } else if (!gameOver && !isPaused) {
                     handler.postDelayed(this, 10); // Recheck collision every 10ms
                 }
             }
@@ -194,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkLevelUp() {
         int newLevel = (score / 30) + 1; // Calculate the level based on score (every 30 points)
         if (newLevel > level) { // If a new level is reached
+            isPaused = true; // Pause the game
             level = newLevel; // Update the player's level
             updateLevelText(); // Update the level display
             showLevelUpDialog(); // Show level-up dialog
@@ -209,7 +213,9 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); // Close the dialog and continue the game
+                        dialog.dismiss(); // Close the dialog
+                        isPaused = false; // Resume the game
+                        startObstacleSpawner(); // Restart the obstacle spawner
                     }
                 });
 
