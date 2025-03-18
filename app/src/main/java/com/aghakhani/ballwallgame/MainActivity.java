@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         View object = new View(this);
 
         // Set size for the object (star or obstacle)
-        int objectSize = isStar ? 100 : random.nextInt(100) + 50; // Star size fixed at 100dp, obstacles random between 50 and 150dp
+        int objectSize = isStar ? 150 : random.nextInt(150) + 50; // Star size fixed at 150dp, obstacles random between 50 and 150dp
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(objectSize, objectSize);
         params.leftMargin = random.nextInt(getScreenWidth() - objectSize); // Random horizontal position
         params.topMargin = 0;
