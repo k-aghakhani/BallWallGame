@@ -82,49 +82,57 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (!gameOver && !isPaused) {
-                    spawnObstacle();
-                    handler.postDelayed(this, 1000); // Spawn an obstacle every 1 second
+                    spawnObstacleOrStar();
+                    handler.postDelayed(this, 1000); // Spawn an obstacle or star every 1 second
                 }
             }
         };
         handler.postDelayed(obstacleSpawnerRunnable, 1000);
     }
 
-    // Spawn a new obstacle with variety in size, color, and speed
-    private void spawnObstacle() {
-        View obstacle = new View(this);
+    // Spawn either an obstacle or a star randomly
+    private void spawnObstacleOrStar() {
+        boolean isStar = random.nextInt(100) < 20; // 20% chance to spawn a star
+        View object = new View(this);
 
-        // Random size for the obstacle (between 50dp and 150dp)
-        int obstacleSize = random.nextInt(100) + 50; // Random between 50 and 150
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(obstacleSize, obstacleSize);
-        params.leftMargin = random.nextInt(getScreenWidth() - obstacleSize); // Random horizontal position
+        // Set size for the object (star or obstacle)
+        int objectSize = isStar ? 100 : random.nextInt(100) + 50; // Star size fixed at 100dp, obstacles random between 50 and 150dp
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(objectSize, objectSize);
+        params.leftMargin = random.nextInt(getScreenWidth() - objectSize); // Random horizontal position
         params.topMargin = 0;
-        obstacle.setLayoutParams(params);
+        object.setLayoutParams(params);
 
-        // Array of colors for variety
-        int[] obstacleColors = {
-                Color.RED,          // Red
-                Color.BLUE,         // Blue
-                Color.GREEN,        // Green
-                Color.YELLOW        // Yellow
-        };
-        obstacle.setBackgroundColor(obstacleColors[random.nextInt(obstacleColors.length)]);
+        // Set appearance based on whether it's a star or an obstacle
+        if (isStar) {
+            object.setBackgroundResource(R.drawable.star); // Use star image
+            object.setTag("star"); // Tag to identify the object as a star
+        } else {
+            // Array of colors for obstacles
+            int[] obstacleColors = {
+                    Color.RED,          // Red
+                    Color.BLUE,         // Blue
+                    Color.GREEN,        // Green
+                    Color.YELLOW        // Yellow
+            };
+            object.setBackgroundColor(obstacleColors[random.nextInt(obstacleColors.length)]);
+            object.setTag("obstacle"); // Tag to identify the object as an obstacle
+        }
 
-        // Add the obstacle to the layout
-        mainLayout.addView(obstacle);
+        // Add the object to the layout
+        mainLayout.addView(object);
 
         // Calculate speed based on level (faster as level increases)
         int baseDuration = 2000; // Base duration for Level 1
         int levelFactor = Math.max(0, level - 1); // Increase difficulty from Level 2 onwards
         int duration = Math.max(500, baseDuration - (levelFactor * 300)); // Decrease duration for higher levels
 
-        obstacle.animate()
+        object.animate()
                 .translationY(getScreenHeight())
                 .setDuration(duration)
                 .withEndAction(() -> {
-                    // Remove obstacle when it leaves the screen
-                    mainLayout.removeView(obstacle);
-                    if (!gameOver && !isPaused) {
+                    // Remove object when it leaves the screen
+                    mainLayout.removeView(object);
+                    if (!gameOver && !isPaused && !isStar) { // Only increment score for obstacles
                         score++; // Increment score
                         updateScoreText(); // Update score display
                         checkLevelUp(); // Check if player levels up
@@ -134,11 +142,15 @@ public class MainActivity extends AppCompatActivity {
                 .start();
 
         // Check for collision with the ball
-        checkCollision(obstacle);
+        if (isStar) {
+            checkStarCollision(object); // Check for star collision
+        } else {
+            checkObstacleCollision(object); // Check for obstacle collision
+        }
     }
 
     // Check if the ball collides with an obstacle
-    private void checkCollision(View obstacle) {
+    private void checkObstacleCollision(View obstacle) {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -152,6 +164,25 @@ public class MainActivity extends AppCompatActivity {
                     vibrateEffect(ball); // Apply vibration effect to the ball
                     playSound(R.raw.game_over_sound); // Play game over sound
                 } else if (!gameOver && !isPaused) {
+                    handler.postDelayed(this, 10); // Recheck collision every 10ms
+                }
+            }
+        }, 10);
+    }
+
+    // Check if the ball collides with a star
+    private void checkStarCollision(View star) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!gameOver && !isPaused && isColliding(ball, star)) {
+                    // Add 10 points for collecting the star
+                    score += 10;
+                    updateScoreText();
+                    checkLevelUp(); // Check if player levels up
+                    playSound(R.raw.score_sound); // Play score sound
+                    mainLayout.removeView(star); // Remove the star after collection
+                } else if (!gameOver && !isPaused && star.getParent() != null) {
                     handler.postDelayed(this, 10); // Recheck collision every 10ms
                 }
             }
