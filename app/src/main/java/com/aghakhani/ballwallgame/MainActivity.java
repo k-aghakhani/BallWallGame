@@ -23,9 +23,11 @@ public class MainActivity extends AppCompatActivity {
     private View ball; // The player's ball
     private TextView scoreText; // The score display
     private TextView levelText; // The level display
+    private TextView livesText; // The lives display
     private RelativeLayout mainLayout; // The main game layout
     private int score = 0; // Player's current score
     private int level = 1; // Player's current level
+    private int lives = 3; // Player's current lives
     private boolean gameOver = false; // Flag to indicate if the game is over
     private boolean isPaused = false; // Flag to indicate if the game is paused
     private Handler handler = new Handler(); // Handler for scheduling timed events
@@ -41,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
         ball = findViewById(R.id.ball);
         scoreText = findViewById(R.id.scoreText);
         levelText = findViewById(R.id.levelText);
+        livesText = findViewById(R.id.livesText);
         mainLayout = findViewById(R.id.mainLayout);
 
-        // Set initial level display
+        // Set initial level and lives display
         updateLevelText();
+        updateLivesText();
 
         // Set up ball movement with touch events
         ball.setOnTouchListener(new View.OnTouchListener() {
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         View object = new View(this);
 
         // Set size for the object (star or obstacle)
-        int objectSize = isStar ? 150 : random.nextInt(150) + 50; // Star size fixed at 150dp, obstacles random between 50 and 150dp
+        int objectSize = isStar ? 100 : random.nextInt(100) + 50; // Star size fixed at 100dp, obstacles random between 50 and 150dp
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(objectSize, objectSize);
         params.leftMargin = random.nextInt(getScreenWidth() - objectSize); // Random horizontal position
         params.topMargin = 0;
@@ -155,14 +159,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (!gameOver && !isPaused && isColliding(ball, obstacle)) {
-                    gameOver = true; // End the game
-                    showGameOverDialog(); // Show game over dialog
-
-                    // Change score background to red
-                    scoreText.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                    scoreText.setTextColor(getResources().getColor(android.R.color.white));
+                    lives--; // Decrease lives by 1
+                    updateLivesText(); // Update lives display
+                    mainLayout.removeView(obstacle); // Remove the obstacle after collision
                     vibrateEffect(ball); // Apply vibration effect to the ball
-                    playSound(R.raw.game_over_sound); // Play game over sound
+                    playSound(R.raw.game_over_sound); // Play collision sound
+
+                    if (lives <= 0) { // If no lives left, end the game
+                        gameOver = true;
+                        showGameOverDialog();
+                        // Change score background to red
+                        scoreText.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                        scoreText.setTextColor(getResources().getColor(android.R.color.white));
+                    }
                 } else if (!gameOver && !isPaused) {
                     handler.postDelayed(this, 10); // Recheck collision every 10ms
                 }
@@ -222,6 +231,12 @@ public class MainActivity extends AppCompatActivity {
     private void updateLevelText() {
         levelText.setText("Level: " + level);
         vibrateEffect(levelText); // Apply vibration effect to the level text
+    }
+
+    // Update the lives display text
+    private void updateLivesText() {
+        livesText.setText("Lives: " + lives);
+        vibrateEffect(livesText); // Apply vibration effect to the lives text
     }
 
     // Check if the player has reached a new level (every 30 points)
