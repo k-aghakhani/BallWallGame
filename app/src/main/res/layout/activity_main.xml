@@ -8,6 +8,13 @@
     android:background="@drawable/background_gradient"
     tools:context=".MainActivity">
 
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
     <!-- Score Text -->
     <TextView
         android:id="@+id/scoreText"
@@ -39,6 +46,25 @@
         android:padding="8dp"
         android:layout_margin="16dp"
         android:layout_below="@id/scoreText"
+        android:layout_centerHorizontal="true"
+        android:elevation="4dp"
+        android:shadowColor="@android:color/darker_gray"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5" />
+
+    <!-- Lives Text -->
+    <TextView
+        android:id="@+id/livesText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lives: 3"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/score_background"
+        android:padding="8dp"
+        android:layout_margin="16dp"
+        android:layout_below="@id/levelText"
         android:layout_centerHorizontal="true"
         android:elevation="4dp"
         android:shadowColor="@android:color/darker_gray"
