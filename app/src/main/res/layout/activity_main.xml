@@ -8,52 +8,45 @@
     android:background="@drawable/background_gradient"
     tools:context=".MainActivity">
 
-    <!-- LinearLayout to hold Score and Lives side by side -->
-    <LinearLayout
-        android:id="@+id/scoreLivesLayout"
+    <!-- Score Text (Top-Left) -->
+    <TextView
+        android:id="@+id/scoreText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:text="Score: 0"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/score_background"
+        android:padding="10dp"
+        android:layout_margin="16dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="16dp">
+        android:layout_alignParentStart="true"
+        android:elevation="4dp"
+        android:shadowColor="@android:color/darker_gray"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5" />
 
-        <!-- Score Text -->
-        <TextView
-            android:id="@+id/scoreText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Score: 0"
-            android:textSize="28sp"
-            android:textColor="@android:color/white"
-            android:background="@drawable/score_background"
-            android:padding="12dp"
-            android:layout_marginEnd="16dp"
-            android:elevation="4dp"
-            android:shadowColor="@android:color/darker_gray"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="5" />
+    <!-- Lives Text (Top-Right) -->
+    <TextView
+        android:id="@+id/livesText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lives: 3"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/score_background"
+        android:padding="8dp"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:elevation="4dp"
+        android:shadowColor="@android:color/darker_gray"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5" />
 
-        <!-- Lives Text -->
-        <TextView
-            android:id="@+id/livesText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lives: 3"
-            android:textSize="20sp"
-            android:textColor="@android:color/white"
-            android:background="@drawable/score_background"
-            android:padding="8dp"
-            android:elevation="4dp"
-            android:shadowColor="@android:color/darker_gray"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="5" />
-
-    </LinearLayout>
-
-    <!-- Level Text -->
+    <!-- Level Text (Top-Center) -->
     <TextView
         android:id="@+id/levelText"
         android:layout_width="wrap_content"
@@ -64,7 +57,7 @@
         android:background="@drawable/score_background"
         android:padding="8dp"
         android:layout_margin="16dp"
-        android:layout_below="@id/scoreLivesLayout"
+        android:layout_below="@id/scoreText"
         android:layout_centerHorizontal="true"
         android:elevation="4dp"
         android:shadowColor="@android:color/darker_gray"
