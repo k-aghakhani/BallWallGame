@@ -13,66 +13,66 @@
         android:id="@+id/scoreText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score: 0"
-        android:textSize="24sp"
-        android:textColor="@android:color/white"
-        android:background="@drawable/score_background"
-        android:padding="10dp"
-        android:layout_margin="16dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/score_background"
         android:elevation="4dp"
+        android:padding="10dp"
         android:shadowColor="@android:color/darker_gray"
         android:shadowDx="2"
         android:shadowDy="2"
-        android:shadowRadius="5" />
+        android:shadowRadius="5"
+        android:text="Score: 0"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
 
     <!-- Lives Text (Top-Right) -->
     <TextView
         android:id="@+id/livesText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lives: 3"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        android:background="@drawable/score_background"
-        android:padding="8dp"
-        android:layout_margin="16dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/lives_background"
         android:elevation="4dp"
+        android:padding="8dp"
         android:shadowColor="@android:color/darker_gray"
         android:shadowDx="2"
         android:shadowDy="2"
-        android:shadowRadius="5" />
+        android:shadowRadius="5"
+        android:text="Lives: 3"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
     <!-- Level Text (Top-Center) -->
     <TextView
         android:id="@+id/levelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Level: 1"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        android:background="@drawable/score_background"
-        android:padding="8dp"
-        android:layout_margin="16dp"
         android:layout_below="@id/scoreText"
         android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/level_background"
         android:elevation="4dp"
+        android:padding="8dp"
         android:shadowColor="@android:color/darker_gray"
         android:shadowDx="2"
         android:shadowDy="2"
-        android:shadowRadius="5" />
+        android:shadowRadius="5"
+        android:text="Level: 1"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
     <!-- Ball -->
     <View
         android:id="@+id/ball"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/ball_face"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp"
+        android:background="@drawable/ball_face" />
 
 </RelativeLayout>
